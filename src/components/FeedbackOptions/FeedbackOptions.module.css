@@ -1,0 +1,12 @@
+.btnWrapper {
+  margin-left: 15px;
+}
+.button {
+  text-transform: capitalize;
+  cursor: pointer;
+  background-color: #ffffff;
+}
+
+.button:not(:last-child) {
+  margin-right: 10px;
+}
