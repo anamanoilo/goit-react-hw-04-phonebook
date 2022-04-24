@@ -1,42 +1,51 @@
+import { useState } from 'react';
 import Section from './Section/Section';
 import Statistics from './Statistics/Statistics';
 import FeedbackOptions from './FeedbackOptions/FeedbackOptions';
 import Notification from './Notification/Notification';
-import { useState } from 'react';
 
-export function App() {
-  const [state, setState] = useState({
-    good: 0,
-    neutral: 0,
-    bad: 0,
-  });
+function App() {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
 
-  const onClick = ({ target }) => {
-    setState(state => {
-      return {
-        ...state,
-        [target.dataset.option]: state[target.dataset.option] + 1,
-      };
-    });
+  const onClick = e => {
+    switch (e.target.dataset.id) {
+      case 'good':
+        setGood(good + 1);
+        break;
+      case 'neutral':
+        setNeutral(neutral + 1);
+        break;
+      case 'bad':
+        setBad(bad + 1);
+        break;
+
+      default:
+        return;
+    }
   };
 
   const countTotalFeedback = () => {
-    return Object.values(state).reduce((acc, cur) => acc + cur, 0);
+    return good + neutral + bad;
   };
 
   const countPositiveFeedbackPercentage = () => {
-    return `${Math.round((state.good / countTotalFeedback()) * 100)}%`;
+    return `${Math.round((good / countTotalFeedback()) * 100)}%`;
   };
 
   const statistics = [
-    ...Object.entries(state),
+    ...Object.entries({ good, neutral, bad }),
     ['total', countTotalFeedback()],
     ['positive feedback', countPositiveFeedbackPercentage()],
   ];
   return (
     <>
       <Section title="Please leave your feedback">
-        <FeedbackOptions options={state} onLeaveFeedback={onClick} />
+        <FeedbackOptions
+          options={{ good, neutral, bad }}
+          onLeaveFeedback={onClick}
+        />
       </Section>
       <Section title="Statistics">
         {countTotalFeedback() ? (
@@ -48,3 +57,5 @@ export function App() {
     </>
   );
 }
+
+export default App;
